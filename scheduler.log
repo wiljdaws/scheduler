@@ -1,0 +1,280 @@
+2023-08-05 13:36:47 - INFO - Scheduler started
+2023-08-05 13:40:35 - INFO - Scheduler started
+2023-08-05 13:40:35 - INFO - Scheduled tasks: set()
+2023-08-05 13:41:44 - INFO - Scheduler started
+2023-08-05 13:41:44 - INFO - Scheduled tasks: set()
+2023-08-05 13:41:44 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 13:41:44 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-05 14:00:00
+2023-08-05 13:41:44 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-05 15:00:00
+2023-08-05 13:43:20 - INFO - Scheduler started
+2023-08-05 13:43:20 - INFO - Scheduled tasks: set()
+2023-08-05 13:43:36 - INFO - Scheduler started
+2023-08-05 13:43:36 - INFO - Scheduled tasks: set()
+2023-08-05 13:44:05 - INFO - Scheduler started
+2023-08-05 13:44:05 - INFO - Scheduled tasks: set()
+2023-08-05 13:44:05 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 13:44:05 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-05 14:00:00
+2023-08-05 13:44:05 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-05 15:00:00
+2023-08-05 13:45:00 - INFO - Scheduler started
+2023-08-05 13:45:00 - INFO - Scheduled tasks: set()
+2023-08-05 13:45:00 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 13:45:00 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-05 14:00:00
+2023-08-05 13:45:00 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-05 15:00:00
+2023-08-05 13:53:48 - INFO - Scheduler started
+2023-08-05 13:53:48 - INFO - Scheduled tasks: set()
+2023-08-05 13:53:48 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 13:53:48 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-05 14:00:00
+2023-08-05 13:53:48 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-05 15:00:00
+2023-08-05 13:59:05 - INFO - Scheduler started
+2023-08-05 13:59:05 - INFO - Scheduled tasks: set()
+2023-08-05 13:59:05 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 13:59:05 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-05 14:00:00
+2023-08-05 13:59:05 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-05 15:00:00
+2023-08-05 14:07:25 - INFO - Scheduler started
+2023-08-05 14:07:25 - INFO - Scheduled tasks: set()
+2023-08-05 14:07:25 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 14:08:22 - INFO - Scheduler started
+2023-08-05 14:08:22 - INFO - Scheduled tasks: set()
+2023-08-05 14:08:22 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 14:09:47 - INFO - Scheduler started
+2023-08-05 14:09:47 - INFO - Scheduled tasks: set()
+2023-08-05 14:09:47 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 14:10:52 - INFO - Scheduler started
+2023-08-05 14:10:52 - INFO - Scheduled tasks: set()
+2023-08-05 14:10:52 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 14:10:52 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-05 15:00:00
+2023-08-05 14:15:00 - INFO - Running hourly task for Inbound department, shift: Days at 2023-08-05 14:15:00
+2023-08-05 14:15:00 - INFO - Running inbound hourly task for Inbound department, shift: Days at 14:15
+2023-08-05 14:17:04 - INFO - Scheduler started
+2023-08-05 14:17:04 - INFO - Scheduled tasks: set()
+2023-08-05 14:18:04 - INFO - Scheduler started
+2023-08-05 14:25:02 - INFO - Scheduler started
+2023-08-05 14:25:02 - INFO - Scheduled tasks: set()
+2023-08-05 14:25:46 - INFO - Scheduler started
+2023-08-05 14:25:46 - INFO - Scheduled tasks: set()
+2023-08-05 14:27:14 - INFO - Scheduler started
+2023-08-05 14:27:14 - INFO - Scheduled tasks: set()
+2023-08-05 14:53:38 - INFO - Scheduler started
+2023-08-05 14:53:38 - INFO - Scheduled tasks: set()
+2023-08-05 14:56:01 - INFO - Scheduler started
+2023-08-05 14:56:01 - INFO - Scheduled tasks: set()
+2023-08-05 14:57:04 - INFO - Scheduler started
+2023-08-05 14:57:04 - INFO - Scheduled tasks: set()
+2023-08-05 15:07:27 - INFO - Scheduler started
+2023-08-05 15:08:38 - INFO - Scheduler started
+2023-08-05 15:12:10 - INFO - Scheduler started
+2023-08-05 15:13:41 - INFO - Scheduler started
+2023-08-05 15:14:43 - INFO - Scheduler started
+2023-08-05 15:15:25 - INFO - Scheduler started
+2023-08-05 15:16:11 - INFO - Scheduler started
+2023-08-05 15:16:47 - INFO - Scheduler started
+2023-08-05 15:17:23 - INFO - Scheduler started
+2023-08-05 15:18:54 - INFO - Scheduler started
+2023-08-05 15:19:54 - INFO - Scheduler started
+2023-08-05 15:20:48 - INFO - Scheduler started
+2023-08-05 15:22:41 - INFO - Scheduler started
+2023-08-05 15:23:43 - INFO - Scheduler started
+2023-08-05 15:29:54 - INFO - Scheduler started
+2023-08-05 15:31:43 - INFO - Scheduler started
+2023-08-05 15:34:26 - INFO - Scheduler started
+2023-08-05 15:35:39 - INFO - Scheduler started
+2023-08-05 15:36:38 - INFO - Scheduler started
+2023-08-05 15:37:34 - INFO - Scheduler started
+2023-08-05 15:39:12 - INFO - Scheduler started
+2023-08-05 15:39:12 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:12.125933
+2023-08-05 15:39:12 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:12.141930
+2023-08-05 15:39:12 - INFO - Scheduled tasks: set()
+2023-08-05 15:39:12 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 15:41:51 - INFO - Scheduler started
+2023-08-05 15:41:51 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:51.503521
+2023-08-05 15:41:51 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:51.523171
+2023-08-05 15:41:51 - INFO - Scheduled tasks: set()
+2023-08-05 15:41:51 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 15:43:06 - INFO - Scheduler started
+2023-08-05 15:43:06 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:06.219658
+2023-08-05 15:43:06 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:06.237759
+2023-08-05 15:43:06 - INFO - Scheduled tasks: set()
+2023-08-05 15:43:06 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 15:44:19 - INFO - Scheduler started
+2023-08-05 15:44:56 - INFO - Scheduler started
+2023-08-05 15:44:56 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:56.265793
+2023-08-05 15:44:56 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:56.281807
+2023-08-05 15:44:56 - INFO - Scheduled tasks: set()
+2023-08-05 15:44:56 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 15:44:56 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 08:37:00
+2023-08-05 15:44:56 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 11:15:00
+2023-08-05 15:44:56 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 13:52:00
+2023-08-05 15:44:56 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 16:30:00
+2023-08-05 15:44:56 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 16:30:00
+2023-08-05 15:53:24 - INFO - Scheduler started
+2023-08-05 15:53:58 - INFO - Scheduler started
+2023-08-05 15:54:31 - INFO - Scheduler started
+2023-08-05 15:54:38 - INFO - Scheduler started
+2023-08-05 15:54:38 - INFO - Scheduled tasks: set()
+2023-08-05 15:54:38 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 15:54:38 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 08:37:00
+2023-08-05 15:54:38 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 11:15:00
+2023-08-05 15:54:38 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 13:52:00
+2023-08-05 15:54:38 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 16:30:00
+2023-08-05 15:54:38 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 16:30:00
+2023-08-05 15:55:34 - INFO - Scheduler started
+2023-08-05 15:55:34 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:34.857405
+2023-08-05 15:55:34 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:34.876402
+2023-08-05 15:55:34 - INFO - Scheduled tasks: set()
+2023-08-05 15:55:34 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 15:55:34 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 08:37:00
+2023-08-05 15:55:34 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 11:15:00
+2023-08-05 15:55:34 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 13:52:00
+2023-08-05 15:55:34 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 16:30:00
+2023-08-05 15:55:34 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 16:30:00
+2023-08-05 15:56:36 - INFO - Scheduler started
+2023-08-05 15:56:36 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:36.822587
+2023-08-05 15:56:36 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:36.839868
+2023-08-05 15:56:36 - INFO - Scheduled tasks: set()
+2023-08-05 15:56:36 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 15:56:36 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-05 16:30:00
+2023-08-05 15:58:14 - INFO - Scheduler started
+2023-08-05 15:58:14 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:14.851299
+2023-08-05 15:58:14 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:14.879408
+2023-08-05 15:58:14 - INFO - Scheduled tasks: set()
+2023-08-05 15:58:14 - INFO - Scheduling tasks for Inbound department, shift: Days
+2023-08-05 16:00:11 - INFO - Scheduler started
+2023-08-05 16:00:11 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:11.167026
+2023-08-05 16:00:11 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:11.185035
+2023-08-05 16:00:11 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:11.187463
+2023-08-05 16:00:11 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:11.205533
+2023-08-05 16:05:23 - INFO - Scheduler started
+2023-08-05 16:05:23 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:23.332282
+2023-08-05 16:05:23 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:23.350352
+2023-08-05 16:05:23 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:23.351906
+2023-08-05 16:05:23 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:23.369285
+2023-08-05 16:05:35 - INFO - Scheduler started
+2023-08-05 16:05:35 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:35.587741
+2023-08-05 16:05:35 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:35.624767
+2023-08-05 16:05:35 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:35.626733
+2023-08-05 16:05:35 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:35.648737
+2023-08-05 16:12:08 - INFO - Scheduler started
+2023-08-05 16:12:08 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:08.031085
+2023-08-05 16:12:08 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:08.051084
+2023-08-05 16:12:08 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:08.052802
+2023-08-05 16:12:08 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:08.072808
+2023-08-05 16:12:33 - INFO - Scheduler started
+2023-08-05 16:12:33 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:33.988911
+2023-08-05 16:12:34 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:34.007908
+2023-08-05 16:12:34 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:34.008942
+2023-08-05 16:12:34 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:34.024996
+2023-08-05 16:14:48 - INFO - Scheduler started
+2023-08-05 16:14:48 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:48.166767
+2023-08-05 16:14:48 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:48.183831
+2023-08-05 16:14:48 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:48.185829
+2023-08-05 16:14:48 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:48.202858
+2023-08-05 16:15:03 - INFO - Scheduler started
+2023-08-05 16:15:03 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:03.542203
+2023-08-05 16:15:03 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:03.563569
+2023-08-05 16:15:03 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:03.564599
+2023-08-05 16:15:03 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:03.583567
+2023-08-05 16:15:22 - INFO - Scheduler started
+2023-08-05 16:15:22 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:22.711128
+2023-08-05 16:15:22 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:22.729100
+2023-08-05 16:15:22 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:22.731060
+2023-08-05 16:15:22 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:22.750343
+2023-08-05 16:15:39 - INFO - Scheduler started
+2023-08-05 16:15:39 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:39.711332
+2023-08-05 16:15:39 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:39.730629
+2023-08-05 16:15:39 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:39.732155
+2023-08-05 16:15:39 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:39.747268
+2023-08-05 16:16:03 - INFO - Scheduler started
+2023-08-05 16:16:03 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:03.677727
+2023-08-05 16:16:03 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:03.696580
+2023-08-05 16:16:03 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:03.698528
+2023-08-05 16:16:03 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:03.717393
+2023-08-05 16:16:33 - INFO - Scheduler started
+2023-08-05 16:16:33 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:33.486839
+2023-08-05 16:16:33 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:33.508034
+2023-08-05 16:16:33 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:33.508923
+2023-08-05 16:16:33 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:33.529746
+2023-08-05 16:17:08 - INFO - Scheduler started
+2023-08-05 16:17:08 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:08.082082
+2023-08-05 16:17:08 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:08.100089
+2023-08-05 16:17:08 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:08.101982
+2023-08-05 16:17:08 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:08.119083
+2023-08-05 16:18:08 - INFO - Scheduler started
+2023-08-05 16:18:08 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:08.722032
+2023-08-05 16:18:08 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:08.739028
+2023-08-05 16:18:08 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:08.741266
+2023-08-05 16:18:08 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:08.758271
+2023-08-05 16:18:39 - INFO - Scheduler started
+2023-08-05 16:18:39 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:39.704349
+2023-08-05 16:18:39 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:39.722342
+2023-08-05 16:18:39 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:39.724375
+2023-08-05 16:18:39 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:39.742297
+2023-08-05 16:19:36 - INFO - Scheduler started
+2023-08-05 16:19:36 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:36.376252
+2023-08-05 16:19:36 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:36.395403
+2023-08-05 16:19:36 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:36.397360
+2023-08-05 16:19:36 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:36.414582
+2023-08-05 16:21:20 - INFO - Scheduler started
+2023-08-05 16:21:20 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:20.307183
+2023-08-05 16:21:20 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:20.338451
+2023-08-05 16:21:20 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:20.338451
+2023-08-05 16:21:20 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:20.360632
+2023-08-05 16:22:23 - INFO - Scheduler started
+2023-08-05 16:22:23 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:23.642750
+2023-08-05 16:22:23 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:23.658415
+2023-08-05 16:22:23 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:23.658415
+2023-08-05 16:22:23 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:23.685851
+2023-08-05 16:25:44 - INFO - Scheduler started
+2023-08-05 16:25:44 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:44.756421
+2023-08-05 16:25:44 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:44.772153
+2023-08-05 16:25:44 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:44.780212
+2023-08-05 16:25:44 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:44.797266
+2023-08-05 16:26:40 - INFO - Scheduler started
+2023-08-05 16:26:40 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:40.500499
+2023-08-05 16:26:40 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:40.515530
+2023-08-05 16:26:40 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:40.515530
+2023-08-05 16:26:40 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:40.547039
+2023-08-05 16:26:55 - INFO - Scheduler started
+2023-08-05 16:26:55 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:55.948015
+2023-08-05 16:26:55 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:55.956390
+2023-08-05 16:26:55 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:55.956390
+2023-08-05 16:26:55 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:55.988037
+2023-08-05 16:28:00 - INFO - Scheduler started
+2023-08-05 16:28:00 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:00.046382
+2023-08-05 16:28:00 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:00.061898
+2023-08-05 16:28:00 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:00.061898
+2023-08-05 16:28:00 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:00.086492
+2023-08-05 16:28:21 - INFO - Scheduler started
+2023-08-05 16:28:21 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:21.217345
+2023-08-05 16:28:21 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:21.236414
+2023-08-05 16:28:21 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:21.237312
+2023-08-05 16:28:21 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:21.255467
+2023-08-05 16:30:04 - INFO - Scheduler started
+2023-08-05 16:30:04 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:04.041217
+2023-08-05 16:30:04 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:04.059321
+2023-08-05 16:30:04 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:04.061206
+2023-08-05 16:30:04 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:04.079317
+2023-08-05 16:30:33 - INFO - Scheduler started
+2023-08-05 16:30:33 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:33.125833
+2023-08-05 16:30:33 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:33.144987
+2023-08-05 16:30:33 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:33.146268
+2023-08-05 16:30:33 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:33.164031
+2023-08-05 16:30:44 - INFO - Scheduler started
+2023-08-05 16:30:44 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:44.862612
+2023-08-05 16:30:44 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:44.880449
+2023-08-05 16:30:44 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:44.882202
+2023-08-05 16:30:44 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:44.900439
+2023-08-05 16:30:55 - INFO - Scheduler started
+2023-08-05 16:30:55 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:55.300416
+2023-08-05 16:30:55 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:55.319512
+2023-08-05 16:30:55 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:55.320411
+2023-08-05 16:30:55 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:55.340317
+2023-08-05 16:31:04 - INFO - Scheduler started
+2023-08-05 16:31:04 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:04.385051
+2023-08-05 16:31:04 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:04.402134
+2023-08-05 16:31:04 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:04.403119
+2023-08-05 16:31:04 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:04.421227
+2023-08-05 16:31:19 - INFO - Scheduler started
+2023-08-05 16:31:19 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:19.342631
+2023-08-05 16:31:19 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:19.361730
+2023-08-05 16:31:19 - INFO - Scheduled hourly task for Inbound department, shift: Days at 2023-08-06 06:00:19.364664
+2023-08-05 16:31:19 - INFO - Scheduled quarterly task for Inbound department, shift: Days at 2023-08-06 06:00:19.382685

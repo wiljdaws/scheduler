@@ -1,0 +1,49 @@
+{
+    "Inbound": {
+      "Days": {
+        "start_time": "06:00",
+        "end_time": "16:30"
+      },
+      "Nights": {
+        "start_time": "16:00",
+        "end_time": "02:30"
+      }
+    },
+    "Outbound": {
+      "Days": {
+        "start_time": "07:00",
+        "end_time": "17:30"
+      },
+      "Nights": {
+        "start_time": "17:00",
+        "end_time": "03:30"
+      }
+    },
+    "Receive": {
+      "Days": {
+        "start_time": "08:00",
+        "end_time": "18:30"
+      },
+      "Nights": {
+        "start_time": "18:00",
+        "end_time": "04:30"
+      }
+    },
+    "ICQA": {
+      "Days": {
+        "start_time": "09:00",
+        "end_time": "19:30"
+      },
+      "Nights": {
+        "start_time": "19:00",
+        "end_time": "05:30"
+      }
+    },
+    "Ops": {
+      "Days": {
+        "start_time": "10:00",
+        "end_time": "20:30"
+      }
+    }
+  }
+  
