@@ -8,7 +8,6 @@ import time
 import json
 import logging
 from tabulate import tabulate
-from typing import Optional, Hashable, List
 num = 20
 # get terminal width
 terminal_width,_ = shutil.get_terminal_size() 
