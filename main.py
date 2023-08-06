@@ -528,10 +528,6 @@ class TaskScheduler:
 
         return next_run_time
 
-
-
-
-
     def clear_console(self):
         """
         Clear the console based on the OS.
