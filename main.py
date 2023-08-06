@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import linecache
 import os
 import shutil
 import traceback
@@ -8,10 +9,12 @@ import time
 import json
 import logging
 from tabulate import tabulate
+from dateutil.parser import parse
 num = 20
 # get terminal width
 terminal_width,_ = shutil.get_terminal_size() 
-spacing = int((terminal_width-15)/3)-20 # set the space between each
+# set  avariable for spacing based on terminal width
+spacing = int((terminal_width-15)/4)-3 # minus three because of the
 frames = [
     " "* spacing + "╔════╤"+"╤╤"*num+"╤════╗\n" +
     " "* spacing + "║    │"+"││"*num+" \\   ║\n" +
@@ -60,9 +63,9 @@ class TaskScheduler:
         stop(): Stop the scheduler.
     """
 
-    def __init__(self, shift_times: dict):
+    def __init__(self, shift_times: dict = None):
         self.tasks = {}
-        self.shift_times = shift_times
+        self.shift_times = shift_times if shift_times is not None else {}
         self.next_run_times = {}  # Dictionary to store the next run time for each task
 
     def is_valid_time_range(self, start_time, end_time):
@@ -243,12 +246,6 @@ class TaskScheduler:
             self.tasks[key] = [task for task in self.tasks[key] if task['frequency'] != frequency]
 
     def view_scheduled_tasks(self):
-        """
-        View the currently scheduled tasks in a tabulated format.
-
-        Returns:
-            str: The tabulated format of the scheduled tasks.
-        """
         tasks_table = []
         for (department, shift), tasks in self.tasks.items():
             for task in tasks:
@@ -256,10 +253,12 @@ class TaskScheduler:
                 program = task['program'].__name__
                 start_time = task['start_time']
                 end_time = task['end_time']
+
                 # Get the next run time using the _get_next_run_time method
-                next_run_time = self._get_next_run_time(task, department)
-                #conver next run time to month/day/year hh:mm
+                next_run_time = self._get_next_run_time(task, department, shift)
+                # Convert next run time to month/day/year hh:mm
                 next_run_time = next_run_time.strftime('%m/%d/%Y %H:%M')
+
                 headers = ["Department", "Shift", "Frequency", "Program", "Start Time", "End Time", "Next Run Time"]
                 tasks_table.append([department, shift, frequency, program, start_time, end_time, next_run_time])
 
@@ -394,35 +393,25 @@ class TaskScheduler:
             logging.error(f"Error occurred during task execution: {e}")
             logging.exception("Error occurred during task execution:")
     
-    # Update the run function
     def run(self):
-        scheduled_tasks = set()
-
         while True:
-            for (department, shift), tasks in self.tasks.items():
-                if (department, shift) not in scheduled_tasks:
-                    logging.info(f"Scheduling tasks for {department} department, shift: {shift}")
-                    for task in tasks:
-                        program = task['program']
-                        self._schedule_task(program, task)
+            # Iterate over the next_run_times dictionary
+            for (department, shift), next_run_time in self.next_run_times.items():
+                # Get the current time
+                current_time = datetime.now()
+                
+                # Check if it's time to run the task
+                if current_time >= next_run_time:
+                    # Run the task
+                    self._execute_task(department, shift)
+                    
+                    # Update the next_run_time for the task
+                    self.next_run_times[(department, shift)] = self._get_next_run_time(
+                        self.tasks[(department, shift)], department, shift
+                    )
 
-                    scheduled_tasks.add((department, shift))
-
-            now = datetime.now()
-            for (department, shift, frequency), next_run_time in self.next_run_times.items():
-                if next_run_time and now >= next_run_time:
-                    task = self.get_task_by_department_shift_frequency(department, shift, frequency)
-                    # Calculate the next occurrence of the shift for the department
-                    next_occurrence, _, _ = self._get_next_occurrence_of_shift(self.shift_times[department][shift])
-                    # If the next run time goes beyond the current day's shift, schedule for the next shift occurrence
-                    if next_run_time > next_occurrence:
-                        next_run_time = next_occurrence
-                    self._execute_task(task)
-                    # Update the next run time for the task
-                    self.next_run_times[(department, shift, frequency)] = self._get_next_run_time(task)
-
-            schedule.run_pending()
-            time.sleep(1)
+            # Sleep for a minute and check again
+            time.sleep(60)
 
     def clear_console(self):
         """
@@ -449,83 +438,54 @@ class TaskScheduler:
         """
         schedule.clear()
 
-    def _get_next_run_time(self, task, department):
-        now = datetime.now()
+    def _get_next_run_time(self, task, department, shift):
+        shift_time = self.shift_times.get(department, {}).get(shift)
+        if not shift_time:
+            raise ValueError("Shift name not found in shift_times or missing 'start_time'")
 
-        if 'frequency' not in task:
-            return None
-
-        frequency = task['frequency']
-
+        start_time = parse(shift_time["start_time"])
+        end_time = parse(shift_time["end_time"])
+        current_time = datetime.now()
+        next_run_time = current_time.replace(hour=start_time.hour, minute=start_time.minute)
+        if shift == "Days":
+            # if the current hour is greater than the next run time
+            if current_time.hour >= next_run_time.hour:
+                next_run_time += timedelta(days=1)
+            if next_run_time.hour >= end_time.hour:
+                next_run_time += timedelta(days=1)
+                next_run_time = next_run_time.replace(hour=start_time.hour, minute=start_time.minute) 
+        # If the shift is "Nights" and the next run time is after midnight
+        if shift == "Nights" and next_run_time.hour <= 9:
+            next_run_time += timedelta(days=1)
+            next_run_time = next_run_time.replace(hour=start_time.hour, minute=start_time.minute)
+        # Handle the case when 'frequency' is 'hourly', 'daily', or not provided
+        frequency = task.get('frequency')
         if frequency == 'hourly':
-            start_time = datetime.strptime(task['start_time'], '%H:%M')
-            end_time = datetime.strptime(task['end_time'], '%H:%M')
-            interval = timedelta(hours=1)
-
-            if self.is_night_shift(task['shift']):
-                next_occurrence, shift_start_time, shift_end_time = self._get_next_occurrence_of_shift(self.shift_times[department]['Nights'])
-                next_run_time = now.replace(hour=shift_start_time.hour, minute=shift_start_time.minute, second=0, microsecond=0)
-
-                while next_run_time < shift_end_time:
-                    if next_run_time >= now:
-                        # Add the 'department' key to the task dictionary
-                        task['department'] = department
-                        self.next_run_times[(task['department'], task['shift'], frequency)] = next_run_time  # Store the next run time in the dictionary
-                        schedule.every().hour.at(next_run_time.strftime('%H:%M')).do(self._execute_task, task)
-
-                    next_run_time += interval
-
-                    # Handle the case when the next_run_time goes beyond the current day's shift
-                    if next_run_time >= shift_end_time:
-                        next_occurrence, shift_start_time, shift_end_time = self._get_next_occurrence_of_shift(self.shift_times[department]['Nights'])
-                        next_run_time = next_occurrence.replace(hour=shift_start_time.hour, minute=shift_start_time.minute)
-
-            else:
-                # For shifts other than night shifts, handle hourly tasks as before
-                next_run_time = now + interval
-
-                # Schedule tasks for each hour within the time range
-                while next_run_time <= datetime.now().replace(hour=end_time.hour, minute=end_time.minute, second=0, microsecond=0):
-                    if next_run_time >= datetime.now().replace(hour=start_time.hour, minute=start_time.minute, second=0, microsecond=0):
-                        # Add the 'department' key to the task dictionary
-                        task['department'] = department
-                        self.next_run_times[(task['department'], task['shift'], frequency)] = next_run_time  # Store the next run time in the dictionary
-                        schedule.every().hour.at(next_run_time.strftime('%H:%M')).do(self._execute_task, task)
-
-                    next_run_time += interval
-
+            min = 60  # Set default frequency to 60 minutes (1 hour)
+        elif frequency == 'daily':
+            min = 1440  # Set default frequency to 1440 minutes (1 day)
         elif frequency == 'quarterly':
-            interval = (datetime.strptime(task['end_time'], '%H:%M') - datetime.strptime(task['start_time'], '%H:%M')) / 4
-            next_run_time = datetime.strptime(task['start_time'], '%H:%M')
-        
-            if self.is_night_shift(task['shift']):
-                # If it's a night shift and we're past midnight...
-                if now.hour < 7:
-                    next_occurrence, _, _ = self._get_next_occurrence_of_shift(self.shift_times[department]['Nights'])
-                    next_run_time = next_occurrence.replace(hour=next_run_time.hour, minute=next_run_time.minute)
-                else:
-                    next_occurrence, _, _ = self._get_next_occurrence_of_shift(self.shift_times[department]['Days'])
-                    next_run_time = next_occurrence.replace(hour=next_run_time.hour, minute=next_run_time.minute)
-                while next_run_time < now:
-                    next_run_time += interval
-
-                if next_run_time > datetime.strptime(task['end_time'], '%H:%M'):
-                    next_run_time = None
+            # Calculate the time difference between shift start and end time
+            if shift == "Days":
+                shift_duration = (end_time - start_time).total_seconds() / 60
+                min = shift_duration / 4
             else:
-                while next_run_time < now:
-                    next_run_time += interval
+                shift_duration = (start_time- end_time).total_seconds() / 60
+                min = shift_duration / 4
+        else:
+            min = 1440  # Set default frequency to 1440 minutes (1 day) for any other case
 
-                if next_run_time > datetime.strptime(task['end_time'], '%H:%M'):
-                    next_run_time = None
+        while next_run_time <= current_time:
+            # Convert the frequency value to an integer before using it in timedelta
+            next_run_time += timedelta(minutes=int(min))
 
-        if next_run_time is None:
-            next_occurrence, _, _ = self._get_next_occurrence_of_shift(self.shift_times[department][task['shift']])
-            if next_run_time is None or next_run_time > next_occurrence:
-                next_run_time = next_occurrence
+            # If the shift is "Nights" and the next_run_time goes past midnight,
+            # adjust it to the next day.
+            if shift == "Nights" and next_run_time.hour >= 24:
+                next_run_time += timedelta(days=1)
+                next_run_time = next_run_time.replace(hour=start_time.hour, minute=start_time.minute)
 
-        self.next_run_times[(department, task['shift'], frequency)] = next_run_time
-        logging.info(f"Scheduled {frequency} task for {department} department, shift: {task['shift']} at {next_run_time}")
-
+        self.next_run_times[(department, shift)] = next_run_time
         return next_run_time
 
     def clear_console(self):
@@ -540,12 +500,14 @@ class TaskScheduler:
         """
         task = self.view_scheduled_tasks()
         title = '''
-                       _____         _      ____       _              _       _           
-                      |_   _|_ _ ___| | __ / ___|  ___| |__   ___  __| |_   _| | ___ _ __ 
-                        | |/ _` / __| |/ / \___ \ / __| '_ \ / _ \/ _` | | | | |/ _ \ '__|
-                        | | (_| \__ \   <   ___) | (__| | | |  __/ (_| | |_| | |  __/ |   
-                        |_|\__,_|___/_|\_\ |____/ \___|_| |_|\___|\__,_|\__,_|_|\___|_|   
+ _____         _      ____       _              _       _           
+|_   _|_ _ ___| | __ / ___|  ___| |__   ___  __| |_   _| | ___ _ __ 
+  | |/ _` / __| |/ / \___ \ / __| '_ \ / _ \/ _` | | | | |/ _ \ '__|
+  | | (_| \__ \   <   ___) | (__| | | |  __/ (_| | |_| | |  __/ |   
+  |_|\__,_|___/_|\_\ |____/ \___|_| |_|\___|\__,_|\__,_|_|\___|_|   
         '''
+        # center multi line title based on terminal width
+        title = "\n".join([" " * (spacing-8)  + line for line in title.split("\n")])
         while True:
             for frame in frames:
                 self.clear_console()
