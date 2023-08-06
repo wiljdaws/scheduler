@@ -539,10 +539,17 @@ class TaskScheduler:
         Display the animation in the console.
         """
         task = self.view_scheduled_tasks()
+        title = '''
+                       _____         _      ____       _              _       _           
+                      |_   _|_ _ ___| | __ / ___|  ___| |__   ___  __| |_   _| | ___ _ __ 
+                        | |/ _` / __| |/ / \___ \ / __| '_ \ / _ \/ _` | | | | |/ _ \ '__|
+                        | | (_| \__ \   <   ___) | (__| | | |  __/ (_| | |_| | |  __/ |   
+                        |_|\__,_|___/_|\_\ |____/ \___|_| |_|\___|\__,_|\__,_|_|\___|_|   
+        '''
         while True:
             for frame in frames:
                 self.clear_console()
-                print(f'{frame}\n\n{task}')
+                print(f'{title}\n{frame}\n\n{task}')
                 time.sleep(frame_delay)
             if not repeat:
                 break
