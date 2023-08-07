@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import linecache
+from operator import call
 import os
 import shutil
 import traceback
@@ -433,8 +434,6 @@ class TaskScheduler:
         next_run_time = current_time.replace(hour=start_time.hour, minute=start_time.minute)
         if shift == "Days":
             # if the current hour is greater than the next run time
-            if current_time.hour >= next_run_time.hour:
-                next_run_time += timedelta(days=1)
             if next_run_time.hour >= end_time.hour:
                 next_run_time += timedelta(days=1)
                 next_run_time = next_run_time.replace(hour=start_time.hour, minute=start_time.minute) 
@@ -514,6 +513,9 @@ def inbound_daily_task(department, shift):
 
 def inbound_hourly_task(department, shift):
     print(f"Running inbound hourly task for {department} department, shift: {shift} at {time.strftime('%H:%M')}")
+    path_to_bat = r'C:\Users\wiljdaws\Desktop\Bat Files'
+    try: call([path_to_bat+r'\weekly_hr.bat'])
+    except: print("an error occured with the money tree workflow at:", time.time())
     # log statement
 
 
