@@ -31,7 +31,7 @@ Organize your tasks efficiently with the Task Scheduling Application. This appli
 
    ```sh
    git clone https://github.com/wiljdaws/scheduler.git
-   cd task-scheduling-app
+   cd scheduler
    ```
 
 2. Install the required dependencies:
