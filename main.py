@@ -1,9 +1,13 @@
 from datetime import datetime, timedelta
+import getpass
 import linecache
 from operator import call
 import os
 import shutil
+import subprocess
+import sys
 import traceback
+from xmlrpc.client import boolean
 from numpy import spacing
 import schedule
 import time
@@ -11,9 +15,12 @@ import json
 import logging
 from tabulate import tabulate
 from dateutil.parser import parse
+import colorama
+from colorama import Fore, Style
+import time
 num = 20
 # get terminal width
-terminal_width,_ = shutil.get_terminal_size() 
+terminal_width = shutil.get_terminal_size().columns
 # set  avariable for spacing based on terminal width
 spacing = int((terminal_width-15)/4)-3 # minus three because of the
 frames = [
@@ -46,6 +53,9 @@ logging.basicConfig(filename='scheduler.log', level=logging.INFO,
 
 logging.info("Scheduler started")
 
+user = getpass.getuser()
+Desktop = os.path.expanduser("~") + r'\Desktop'
+bat_folder = Desktop+r'\Bat Files'
 
 class TaskScheduler:
     """
@@ -57,11 +67,13 @@ class TaskScheduler:
         next_run_times (dict): A dictionary to store the next run time for each task.
 
     Methods:
-        add_task(department, shift, frequency, program, start_time, end_time): Add a task to the scheduler.
-        remove_task(department, shift, frequency): Remove a task from the scheduler.
-        view_scheduled_tasks(): View the currently scheduled tasks.
-        run(): Start the scheduler to run the tasks.
-        stop(): Stop the scheduler.
+        add_task: Add a task to the scheduler.
+        remove_task: Remove a task from the scheduler.
+        view_scheduled_tasks: View the scheduled tasks in a table format.
+        run: Run the scheduler.
+        stop: Stop the scheduler.
+        clear_console: Clear the console based on the OS.
+        display_animation: Display the animation in the console.
     """
 
     def __init__(self, shift_times: dict = None):
@@ -69,7 +81,7 @@ class TaskScheduler:
         self.shift_times = shift_times if shift_times is not None else {}
         self.next_run_times = {}  # Dictionary to store the next run time for each task
 
-    def is_valid_time_range(self, start_time, end_time):
+    def is_valid_time_range(self, start_time: str, end_time: str)-> boolean:
         """
         Check if the time range is valid, accounting for 'Days' and 'Nights' shifts.
 
@@ -94,7 +106,7 @@ class TaskScheduler:
             return next_day_end_time_obj >= start_time_obj
         return False
     
-    def is_night_shift(self, shift):
+    def is_night_shift(self, shift: str)-> boolean:
         """
         Check if the given shift is a night shift.
 
@@ -106,7 +118,7 @@ class TaskScheduler:
         """
         return shift == 'Nights'
         
-    def _get_next_occurrence_of_shift(self, shift_info):
+    def _get_next_occurrence_of_shift(self, shift_info: dict)-> tuple():
         """
         Get the next occurrence of a shift based on the current time.
 
@@ -135,7 +147,7 @@ class TaskScheduler:
             next_day = now + timedelta(days=1)
             return next_day.replace(hour=start_time.hour, minute=start_time.minute), start_time, end_time
     
-    def get_task_by_department_shift_frequency(self, department, shift, frequency):
+    def get_task_by_department_shift_frequency(self, department: str, shift: str, frequency: str)-> dict:
         """
         Get the task from the scheduler based on department, shift, and frequency.
 
@@ -155,7 +167,7 @@ class TaskScheduler:
         return None
 
 
-    def add_task(self, department, shift, frequency, program, start_time, end_time):
+    def add_task(self, department: str, shift: str, frequency: str, program: callable, start_time: str, end_time: str):
         """
         Add a task to the scheduler.
 
@@ -192,7 +204,7 @@ class TaskScheduler:
 
         self.tasks[key].append({'frequency': frequency, 'program': program, 'start_time': start_time, 'end_time': end_time})
 
-    def add_task_for_department_shift(self, department, shift, frequency, program):
+    def add_task_for_department_shift(self, department: str, shift: str, frequency:str, program: callable):
         """
         Add a task to the scheduler for a specific department and shift.
 
@@ -205,6 +217,7 @@ class TaskScheduler:
         Raises:
             ValueError: If an invalid frequency is provided or the task overlaps with an existing one.
         """
+        frequency = frequency.lower()
         if frequency not in ['hourly', 'daily', 'quarterly']:
             raise ValueError("Invalid frequency. Please choose from 'hourly', 'daily', or 'quarterly'.")
 
@@ -216,24 +229,23 @@ class TaskScheduler:
         start_time = shift_times.get('start_time')
         end_time = shift_times.get('end_time')
 
-        if frequency == 'daily':
-            raise ValueError("Daily tasks are not supported in this version of the scheduler.")
-        elif shift == 'Days' and start_time >= end_time:
+        shift = shift.capitalize()
+        if shift == 'Days' and start_time >= end_time:
             raise ValueError(f"End time should be after start time.\n\t department: {department}\t shift: {shift} \n\t start_time: {start_time}\t end_time: {end_time}")
         elif shift == 'Nights' and start_time <= end_time:
             raise ValueError(f"Start time should be after end time.\n\t start_time: {start_time} end_time: {end_time}")
+        else:
+            # Check for overlapping tasks
+            for existing_task in self.tasks[key]:
+                if existing_task['frequency'] == frequency and not (end_time <= existing_task['start_time'] or start_time >= existing_task['end_time']):
+                    raise ValueError("Task overlaps with an existing one.")
 
-        # Check for overlapping tasks
-        for existing_task in self.tasks[key]:
-            if existing_task['frequency'] == frequency and not (end_time <= existing_task['start_time'] or start_time >= existing_task['end_time']):
-                raise ValueError("Task overlaps with an existing one.")
+            # Create the task dictionary with the required details
+            task = {'department': department, 'shift': shift, 'frequency': frequency, 'program': program, 'start_time': start_time, 'end_time': end_time}
 
-        # Create the task dictionary with the required details
-        task = {'department': department, 'shift': shift, 'frequency': frequency, 'program': program, 'start_time': start_time, 'end_time': end_time}
+            self.tasks[key].append(task)
 
-        self.tasks[key].append(task)
-
-    def remove_task(self, department, shift, frequency):
+    def remove_task(self, department:str, shift:str, frequency:str):
         """
         Remove a task from the scheduler.
 
@@ -246,8 +258,15 @@ class TaskScheduler:
         if key in self.tasks:
             self.tasks[key] = [task for task in self.tasks[key] if task['frequency'] != frequency]
 
-    def view_scheduled_tasks(self):
+    def view_scheduled_tasks(self)-> str:
+        '''
+            Displays the scheduled tasks in a table format.
+            
+            Returns:
+                str: The scheduled tasks in a table format.
+        '''
         tasks_table = []
+        headers = ["Department", "Shift", "Frequency", "Program", "Start Time", "End Time", "Next Run Time"]
         for (department, shift), tasks in self.tasks.items():
             for task in tasks:
                 frequency = task['frequency']
@@ -259,13 +278,18 @@ class TaskScheduler:
                 next_run_time = self._get_next_run_time(task, department, shift)
                 # Convert next run time to month/day/year hh:mm
                 next_run_time = next_run_time.strftime('%m/%d/%Y %H:%M')
-
-                headers = ["Department", "Shift", "Frequency", "Program", "Start Time", "End Time", "Next Run Time"]
                 tasks_table.append([department, shift, frequency, program, start_time, end_time, next_run_time])
 
         return tabulate(tasks_table, headers=headers, tablefmt="grid")
 
-    def _schedule_task(self, program, task):
+    def _schedule_task(self, program: callable, task: dict):
+        '''
+            Schedules the task for the shift at the designated department
+            
+            Args:
+                program (callable): The program/function to be executed.
+                task (dict): The task dictionary containing the department, shift, and frequency.
+        '''
         department = task['department']
         shift = task['shift']
         frequency = task['frequency']
@@ -378,6 +402,13 @@ class TaskScheduler:
 
 
     def _execute_task(self, program: callable, task: dict):
+        '''
+            Executes the program specified for the shift at the designated department
+            
+            Args:
+                program (callable): The program/function to be executed.
+                task (dict): The task dictionary containing the department, shift, and frequency.
+        '''
         next_run_time = self.next_run_times.get((task['department'], task['shift'], task['frequency']), None)
 
         if next_run_time is None:
@@ -423,11 +454,23 @@ class TaskScheduler:
         """
         schedule.clear()
 
-    def _get_next_run_time(self, task, department, shift):
+    def _get_next_run_time(self, task: str, department: str, shift: str)-> datetime:
+        '''
+            Calculates the next run time for the shift based on the start times
+            and end times provided in the shift_times.json file along with the fequency provided.
+            
+            Args:
+                task (str): To get the frequency requested i.e, hourly, quarterly or daily.
+                department (str): The department to run the bat file for.
+                shift (str): The shift to run the bat file for.
+            
+            Returns:
+                datetime: The next run time for the shift.
+                
+        '''
         shift_time = self.shift_times.get(department, {}).get(shift)
         if not shift_time:
             raise ValueError("Shift name not found in shift_times or missing 'start_time'")
-
         start_time = parse(shift_time["start_time"])
         end_time = parse(shift_time["end_time"])
         current_time = datetime.now()
@@ -500,26 +543,32 @@ class TaskScheduler:
                 break
 
 
-# Custom tasks for inbound, outbound, receive, ICQA, and ops
-def inbound_quarterly_task(department, shift):
-    print(f"Running inbound quarterly task for {department} department, shift: {shift} at {time.strftime('%H:%M')}")
-    # Your inbound quarterly task logic here
-
-
-def inbound_daily_task(department, shift):
-    print(f"Running inbound daily task for {department} department, shift: {shift} at {time.strftime('%H:%M')}")
-    # Your inbound daily task logic here
-
-
-def inbound_hourly_task(department, shift):
-    print(f"Running inbound hourly task for {department} department, shift: {shift} at {time.strftime('%H:%M')}")
-    path_to_bat = r'C:\Users\wiljdaws\Desktop\Bat Files'
-    try: call([path_to_bat+r'\weekly_hr.bat'])
-    except: print("an error occured with the money tree workflow at:", time.time())
-    # log statement
-
-
-def load_shift_times(json_file):
+def execute_task(department: str = None, shift: str = None, bat_file: str = None):
+    '''
+        Executess the bat_file specified for the shift at the designated department
+        
+        Args:
+            department (str): The department to run the bat file for.
+            shift (str): The shift to run the bat file for.
+            bat_file (str): The bat file to run (looking in Desktop\Bat Files).
+    '''
+    bat_file = bat_folder + r'\{}'.format(bat_file)
+    if bat_file == None:
+        bat_file = f'{department}_{shift}'
+    elif department == None:
+        department = input('Please enter the department: ').capitalize()
+    elif shift == None:
+        shift = input('Please enter Days or Nights: ')   
+    elif not os.path.exists(bat_file):
+        make_bat_files(bat_file_name= bat_file)
+    else:
+        try: 
+            call([bat_file])
+            logging.info(f"Running {bat_file} for {department} department, shift: {shift} at {time.strftime('%H:%M')}")
+        except:
+            logging.error(f"Failed to run {bat_file} for {department} department, shift: {shift} at {time.strftime('%H:%M')}")
+        
+def load_shift_times(json_file: str)-> str:
     """
     Load shift times from a JSON file.
 
@@ -533,24 +582,116 @@ def load_shift_times(json_file):
         shift_times = json.load(file)
     return shift_times
 
+def make_bat_folder():
+    '''
+        Create Bat file in user Desktop if one does not exist.   
+    '''
+    if not os.path.exists(Desktop+r'\Bat Files'):
+        os.makedirs(Desktop+r'\Bat Files')
 
-if __name__ == "__main__":
+def display_link(url: str, center:boolean = False) -> str:
+    '''
+        Creates a url blue clickable link.
+        
+        Args:
+            url (str): The url you want to make clickable.
+            center (boolean): If set to true, the url is centered.
+        
+        Returns:
+            str: A clickable url. 
+    '''
+    colorama.init()
+    clickable_link = f"{Fore.BLUE}{url}{Style.RESET_ALL}"
+    if center:
+        # center the link
+        clickable_link = clickable_link.center(terminal_width)
+    return clickable_link
+
+def correct_file_path(file_path:str)-> str:
+    '''
+        Corrects file path to be compatible with python.
+        
+        Args:
+            file_path (str): The file path to correct.
+        
+        Returns:
+            str: The corrected file path.
+    '''
+    file_path = file_path.replace('\\', '/')
+    return file_path
+        
+def make_bat_files(bat_file_name: str = None):
+    '''
+        Help make bat files to execute python modules.
+
+    '''
+    make_bat_folder()
+    python_file_path = input('Where is your python file located? ')
+    # check if python file path exists
+    if not os.path.exists(python_file_path):
+        # raise error
+        raise FileNotFoundError(f'File not found at {python_file_path}')
+    else:
+        if bat_file_name == None:
+            bat_file_name = input('What would you like to name the file? ')
+        if bat_file_name.split('.')[-1] != 'bat':
+            bat_file_name = bat_file_name.split('.')[0] + '.bat'
+    # get python exe if not found raise error
+    try:
+        python_exe = sys.executable
+    except:
+        link = display_link('https://github.com/wiljdaws/scheduler/wiki')
+        raise FileNotFoundError(f'Sorry, {user} \n\tThe Python executable was not found. Please install python.\n\t If you are utilizing this program at Amazon Python can be installed from software center.\n\t If you need further instruction follow my wiki at {link}')
+    path_to_bat = Desktop + r'\Bat Files'
+    try:
+        with open(path_to_bat+r'\{}'.format(bat_file_name), 'w') as file:
+            file.write(f'\"{python_exe}\" \"{python_file_path}\"')
+    except SyntaxError as e:
+        print(f"Syntax Error {e}")
+        # flip \ to / in file
+        file = correct_file_path(file)
+        with open(path_to_bat+r'\{}'.format(bat_file_name), 'w') as file:
+            file.write(f'\"{python_exe}\" \"{python_file_path}\"')
+
+def user_menu():
+    '''
+        Create a ordered list user menu to execute commands
+        
+    '''
     # Load shift times from JSON file
     with open('shift_times.json', 'r') as file:
         shift_times = json.load(file)
 
     # Create an instance of TaskScheduler
     scheduler = TaskScheduler(shift_times)
-
-    # Add tasks for specific departments and shifts
-    scheduler.add_task_for_department_shift(department='Inbound', shift='Days', frequency='hourly', program=inbound_hourly_task)
-    scheduler.add_task_for_department_shift(department='Inbound', shift='Days', frequency='quarterly', program=inbound_quarterly_task)
-    scheduler.add_task_for_department_shift(department='Outbound', shift='Nights', frequency='quarterly', program=inbound_quarterly_task)
-
-    # View the scheduled tasks
-    print(scheduler.view_scheduled_tasks())
-    
-    scheduler.display_animation()
-
-    # Start the scheduler
-    scheduler.run()
+    wiki = display_link('https://github.com/wiljdaws/scheduler/wiki')
+    print(f'Hello {user}, thank you for utilizing Task Scheduler! Created by wiljdaws\n\n If you would like help with the getting started please refer to {wiki}\n\n')
+    print('='* (terminal_width//2))
+    menu_options = ['Create bat file', 'Schedule a task', 'Start scheduler', 'Quit          ']
+    while True:
+        print()
+        print('USER MENU\n'.center(terminal_width//2))
+        for options in menu_options:
+            print(f'{menu_options.index(options)+1}. {options}'.center(terminal_width//2))
+        print('\n'+'='* (terminal_width//2))
+        # get user input
+        user_input = input('Please enter the number of the method you would like to run: ')
+        # if 1 then make_bat_files()
+        if user_input == '1':
+            make_bat_files()
+        elif user_input == '2':
+            department = input('Which department are you scheduling a task for?: ')
+            shift = input('Which shift (Days or Nights) are you sheduling a task for?: ')
+            frequency = input('What is the frequency of the task (hourly, daily, or quarterly)?: ')
+            scheduler.add_task_for_department_shift(department=department, shift=shift, frequency=frequency, program=execute_task)
+        elif user_input == '3':
+            scheduler.display_animation()
+            scheduler.run()
+        elif user_input.lower() == '4' or 'q':
+            break
+        else:
+            # raise error please enter 1, 2 or 3
+            raise ValueError('Please enter 1, 2, 3, 4 or q')
+        
+if __name__ == "__main__":
+    user_menu()
