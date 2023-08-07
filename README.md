@@ -30,7 +30,7 @@ Organize your tasks efficiently with the Task Scheduling Application. This appli
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/wiljdaws/task-scheduling-app.git
+   git clone https://github.com/wiljdaws/scheduler.git
    cd task-scheduling-app
    ```
 
