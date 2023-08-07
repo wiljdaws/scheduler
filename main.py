@@ -383,15 +383,11 @@ class TaskScheduler:
             return
 
         formatted_next_run_time = next_run_time.strftime('%Y-%m-%d %H:%M:%S')
-        print(f"Running {task['frequency']} task for {task['department']} department, shift: {task['shift']} at {formatted_next_run_time}")
         logging.info(f"Running {task['frequency']} task for {task['department']} department, shift: {task['shift']} at {formatted_next_run_time}")
         try:
             program(task['department'], task['shift'])
         except Exception as e:
-            print(f"Error occurred during task execution: {e}")
-            traceback.print_exc()
             logging.error(f"Error occurred during task execution: {e}")
-            logging.exception("Error occurred during task execution:")
     
     def run(self):
         while True:
@@ -419,18 +415,6 @@ class TaskScheduler:
         """
         os.system('cls' if os.name == 'nt' else 'clear')
 
-    def display_animation(self, frames=frames, repeat=True, frame_delay=0.17):
-        """
-        Display the animation in the console.
-        """
-        task = self.view_scheduled_tasks()
-        while True:
-            for frame in frames:
-                self.clear_console()
-                print(f'{frame}\n\n{task}')
-                time.sleep(frame_delay)
-            if not repeat:
-                break
 
     def stop(self):
         """
@@ -520,8 +504,6 @@ class TaskScheduler:
 # Custom tasks for inbound, outbound, receive, ICQA, and ops
 def inbound_quarterly_task(department, shift):
     print(f"Running inbound quarterly task for {department} department, shift: {shift} at {time.strftime('%H:%M')}")
-    # log statement
-    logging.info(f"Running inbound quarterly task for {department} department, shift: {shift} at {time.strftime('%H:%M')}")
     # Your inbound quarterly task logic here
 
 
@@ -533,8 +515,6 @@ def inbound_daily_task(department, shift):
 def inbound_hourly_task(department, shift):
     print(f"Running inbound hourly task for {department} department, shift: {shift} at {time.strftime('%H:%M')}")
     # log statement
-    logging.info(f"Running inbound hourly task for {department} department, shift: {shift} at {time.strftime('%H:%M')}")
-    # Your inbound hourly task logic here
 
 
 def load_shift_times(json_file):
