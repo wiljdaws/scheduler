@@ -1,0 +1,18 @@
+2023-08-07 13:18:46 - INFO - Scheduler started
+2023-08-07 13:37:42 - INFO - Scheduler started
+2023-08-07 13:44:33 - INFO - Scheduler started
+2023-08-07 13:58:55 - INFO - Scheduler started
+2023-08-07 13:59:14 - INFO - Scheduler started
+2023-08-07 13:59:42 - ERROR - Failed to schedule task for department department, shift: shift at 13:59
+2023-08-07 14:01:01 - INFO - Scheduler started
+2023-08-07 14:01:20 - ERROR - Failed to schedule task for department department, shift: shift at 14:01
+2023-08-07 14:01:20 - ERROR - Failed to schedule task for Outbound department, shift: Days at 14:01
+2023-08-07 14:14:40 - INFO - Scheduler started
+2023-08-07 14:20:29 - INFO - Scheduler started
+2023-08-07 14:24:06 - INFO - Scheduler started
+2023-08-07 14:26:20 - INFO - Scheduler started
+2023-08-07 14:29:37 - INFO - Scheduler started
+2023-08-07 14:30:24 - INFO - Scheduler started
+2023-08-07 14:30:24 - ERROR - Failed to run C:\Users\wiljdaws\Desktop\Bat Files\iol_test_test.bat for Inbound department, shift: Days at 14:30
+2023-08-07 14:32:06 - INFO - Scheduler started
+2023-08-07 14:32:06 - ERROR - Failed to run C:\Users\wiljdaws\Desktop\Bat Files\iol_test_test.bat for Inbound department, shift: Days at 14:32

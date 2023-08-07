@@ -1,3 +1,5 @@
+from csv import reader
+import csv
 from datetime import datetime, timedelta
 import getpass
 import linecache
@@ -270,7 +272,10 @@ class TaskScheduler:
         for (department, shift), tasks in self.tasks.items():
             for task in tasks:
                 frequency = task['frequency']
-                program = task['program'].__name__
+                try:
+                    program = task['program'].__name__
+                except AttributeError as e:
+                    program = task['program']
                 start_time = task['start_time']
                 end_time = task['end_time']
 
@@ -534,10 +539,12 @@ class TaskScheduler:
         '''
         # center multi line title based on terminal width
         title = "\n".join([" " * (spacing-8)  + line for line in title.split("\n")])
+        scheduled_jobs = schedule.get_jobs()
         while True:
             for frame in frames:
                 self.clear_console()
                 print(f'{title}\n{frame}\n\n{task}')
+                print(f'\n\n\t\tscheduled jobs are {scheduled_jobs}')
                 time.sleep(frame_delay)
             if not repeat:
                 break
@@ -552,7 +559,7 @@ def execute_task(department: str = None, shift: str = None, bat_file: str = None
             shift (str): The shift to run the bat file for.
             bat_file (str): The bat file to run (looking in Desktop\Bat Files).
     '''
-    bat_file = bat_folder + r'\{}'.format(bat_file)
+    bat_file = bat_folder + r'\{}.bat'.format(bat_file)
     if bat_file == None:
         bat_file = f'{department}_{shift}'
     elif department == None:
@@ -560,7 +567,9 @@ def execute_task(department: str = None, shift: str = None, bat_file: str = None
     elif shift == None:
         shift = input('Please enter Days or Nights: ')   
     elif not os.path.exists(bat_file):
-        make_bat_files(bat_file_name= bat_file)
+        print(f'bat file path not found \n\t {bat_file}')
+        python_file_path = input('Where is your python file located?: ')
+        make_bat_files(bat_file_name= bat_file, python_file_path = python_file_path)
     else:
         try: 
             call([bat_file])
@@ -620,13 +629,21 @@ def correct_file_path(file_path:str)-> str:
     file_path = file_path.replace('\\', '/')
     return file_path
         
-def make_bat_files(bat_file_name: str = None):
+def make_bat_files(bat_file_name: str = None, python_file_path: str = None):
     '''
         Help make bat files to execute python modules.
+        
+        Args:
+            bat_file_name (str): The name of the bat file to create.
+            python_file_path (str): The path to the python file to execute.
 
     '''
     make_bat_folder()
-    python_file_path = input('Where is your python file located? ')
+    if python_file_path == None:
+        python_file_path = input('Where is your python file located?: ')
+    #testing
+    python_file_path = Desktop + r'/'
+    
     # check if python file path exists
     if not os.path.exists(python_file_path):
         # raise error
@@ -683,9 +700,17 @@ def user_menu():
             department = input('Which department are you scheduling a task for?: ')
             shift = input('Which shift (Days or Nights) are you sheduling a task for?: ')
             frequency = input('What is the frequency of the task (hourly, daily, or quarterly)?: ')
-            scheduler.add_task_for_department_shift(department=department, shift=shift, frequency=frequency, program=execute_task)
+            bat_file = input('What is the name of the bat file?: ')
+            line = f'{department},{shift},{frequency},{bat_file}\n'
+            if not os.path.exists('scheduled_tasks.csv'):
+                with open('scheduled_tasks.csv', 'w') as file:
+                    file.write('department,shift,frequency,bat_file\n')
+                    file.write(line)
+            else:
+                with open('scheduled_tasks.csv', 'a') as file:
+                    file.write(line)
         elif user_input == '3':
-            scheduler.display_animation()
+            scheduler.display_animation()       
             scheduler.run()
         elif user_input.lower() == '4' or 'q':
             break
@@ -694,4 +719,20 @@ def user_menu():
             raise ValueError('Please enter 1, 2, 3, 4 or q')
         
 if __name__ == "__main__":
-    user_menu()
+    #user_menu()
+     # Load shift times from JSON file
+    with open('shift_times.json', 'r') as file:
+        shift_times = json.load(file)
+
+    # Create an instance of TaskScheduler
+    scheduler = TaskScheduler(shift_times)
+
+    # Add tasks for specific departments and shifts
+    scheduler.add_task_for_department_shift(department='Inbound', shift='Days', frequency='hourly', program=execute_task('Inbound', 'Days', 'iol_test_test'))
+    # View the scheduled tasks
+    print(scheduler.view_scheduled_tasks())
+
+    scheduler.display_animation()
+
+    # Start the scheduler
+    scheduler.run()
