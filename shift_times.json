@@ -1,12 +1,12 @@
 {
     "Inbound": {
       "Days": {
-        "start_time": "06:00",
-        "end_time": "16:30"
+        "start_time": "07:00",
+        "end_time": "17:30"
       },
       "Nights": {
-        "start_time": "16:00",
-        "end_time": "02:30"
+        "start_time": "18:30",
+        "end_time": "04:30"
       }
     },
     "Outbound": {
