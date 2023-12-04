@@ -20,6 +20,8 @@ from dateutil.parser import parse
 import colorama
 from colorama import Fore, Style
 import time
+import scheduler
+
 num = 20
 # get terminal width
 terminal_width = shutil.get_terminal_size().columns
@@ -271,9 +273,12 @@ class TaskScheduler:
         headers = ["Department", "Shift", "Frequency", "Program", "Start Time", "End Time", "Next Run Time"]
         for (department, shift), tasks in self.tasks.items():
             for task in tasks:
+                print(task)
                 frequency = task['frequency']
+                print(f'program is {task['program']}')
                 try:
                     program = task['program'].__name__
+                    print(f'program is {task['program']}')
                 except AttributeError as e:
                     program = task['program']
                 start_time = task['start_time']
@@ -281,6 +286,8 @@ class TaskScheduler:
 
                 # Get the next run time using the _get_next_run_time method
                 next_run_time = self._get_next_run_time(task, department, shift)
+                # schedule next run time using built in scheduler
+                self._schedule_task(program, task)
                 # Convert next run time to month/day/year hh:mm
                 next_run_time = next_run_time.strftime('%m/%d/%Y %H:%M')
                 tasks_table.append([department, shift, frequency, program, start_time, end_time, next_run_time])
@@ -429,10 +436,15 @@ class TaskScheduler:
     def run(self):
         while True:
             # Iterate over the next_run_times dictionary
-            for (department, shift), next_run_time in self.next_run_times.items():
+            for (department, shift), tasks in self.tasks.items():
+                print(tasks)
+           # for (department, shift), next_run_time in self.next_run_times.items():
                 # Get the current time
                 current_time = datetime.now()
                 
+                # get next run time
+                next_run_time = self.next_run_times.get((department, shift), None)
+                print(next_run_time)
                 # Check if it's time to run the task
                 if current_time >= next_run_time:
                     # Run the task
@@ -576,6 +588,9 @@ def execute_task(department: str = None, shift: str = None, bat_file: str = None
             logging.info(f"Running {bat_file} for {department} department, shift: {shift} at {time.strftime('%H:%M')}")
         except:
             logging.error(f"Failed to run {bat_file} for {department} department, shift: {shift} at {time.strftime('%H:%M')}")
+    
+    # return bat file name without bat folder ot the .bat at the end
+    return bat_file.split('\\')[-1].split('.')[0]
         
 def load_shift_times(json_file: str)-> str:
     """
@@ -732,7 +747,7 @@ if __name__ == "__main__":
     # View the scheduled tasks
     print(scheduler.view_scheduled_tasks())
 
-    scheduler.display_animation()
+    #scheduler.display_animation()
 
     # Start the scheduler
     scheduler.run()
