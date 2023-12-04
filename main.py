@@ -1,14 +1,9 @@
-from csv import reader
-import csv
 from datetime import datetime, timedelta
 import getpass
-import linecache
 from operator import call
 import os
 import shutil
-import subprocess
 import sys
-import traceback
 from xmlrpc.client import boolean
 from numpy import spacing
 import schedule
@@ -20,13 +15,10 @@ from dateutil.parser import parse
 import colorama
 from colorama import Fore, Style
 import time
-import scheduler
 
 num = 20
-# get terminal width
 terminal_width = shutil.get_terminal_size().columns
-# set  avariable for spacing based on terminal width
-spacing = int((terminal_width-15)/4)-3 # minus three because of the
+spacing = int((terminal_width-15)/4)-3 
 frames = [
     " "* spacing + "╔════╤"+"╤╤"*num+"╤════╗\n" +
     " "* spacing + "║    │"+"││"*num+" \\   ║\n" +
@@ -49,8 +41,6 @@ frames = [
     " "* spacing + "║    O"+"OO"*num+"O    ║"
 ]
 
-
-# Set up logging configuration
 logging.basicConfig(filename='scheduler.log', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
@@ -83,7 +73,7 @@ class TaskScheduler:
     def __init__(self, shift_times: dict = None):
         self.tasks = {}
         self.shift_times = shift_times if shift_times is not None else {}
-        self.next_run_times = {}  # Dictionary to store the next run time for each task
+        self.next_run_times = {}  
 
     def is_valid_time_range(self, start_time: str, end_time: str)-> boolean:
         """
@@ -102,10 +92,8 @@ class TaskScheduler:
         if self.shift == 'Days':
             return end_time_obj >= start_time_obj
         elif self.shift == 'Nights':
-            # For night shifts, we allow end time to be after midnight (i.e., the next day)
             if start_time_obj < end_time_obj:
                 return True
-            # But for the case where end time is before midnight, we add a day to the end time
             next_day_end_time_obj = end_time_obj + timedelta(days=1)
             return next_day_end_time_obj >= start_time_obj
         return False
@@ -138,15 +126,10 @@ class TaskScheduler:
         start_time = datetime.strptime(shift_info['start_time'], '%H:%M')
         end_time = datetime.strptime(shift_info['end_time'], '%H:%M')
 
-        # Check if the current time is before the start time of the shift
         if now < start_time:
             return now, start_time, end_time
-
-        # Check if the current time is between the start and end time of the shift
         elif start_time <= now <= end_time:
             return now, start_time, end_time
-
-        # If the current time is after the end time of the shift, calculate the next shift occurrence for the next day
         else:
             next_day = now + timedelta(days=1)
             return next_day.replace(hour=start_time.hour, minute=start_time.minute), start_time, end_time
@@ -170,7 +153,6 @@ class TaskScheduler:
                     return task
         return None
 
-
     def add_task(self, department: str, shift: str, frequency: str, program: callable, start_time: str, end_time: str):
         """
         Add a task to the scheduler.
@@ -190,7 +172,7 @@ class TaskScheduler:
         if frequency not in ['hourly', 'daily', 'quarterly']:
             raise ValueError("Invalid frequency. Please choose from 'hourly', 'daily', or 'quarterly'.")
 
-        self.shift = shift  # Set the current shift for the task being added
+        self.shift = shift 
 
         if frequency == 'daily':
             raise ValueError("Daily tasks are not supported in this version of the scheduler.")
@@ -201,7 +183,6 @@ class TaskScheduler:
         if key not in self.tasks:
             self.tasks[key] = []
 
-        # Check for overlapping tasks
         for existing_task in self.tasks[key]:
             if existing_task['frequency'] == frequency and not (end_time <= existing_task['start_time'] or start_time >= existing_task['end_time']):
                 raise ValueError("Task overlaps with an existing one.")
@@ -239,14 +220,10 @@ class TaskScheduler:
         elif shift == 'Nights' and start_time <= end_time:
             raise ValueError(f"Start time should be after end time.\n\t start_time: {start_time} end_time: {end_time}")
         else:
-            # Check for overlapping tasks
             for existing_task in self.tasks[key]:
                 if existing_task['frequency'] == frequency and not (end_time <= existing_task['start_time'] or start_time >= existing_task['end_time']):
                     raise ValueError("Task overlaps with an existing one.")
-
-            # Create the task dictionary with the required details
             task = {'department': department, 'shift': shift, 'frequency': frequency, 'program': program, 'start_time': start_time, 'end_time': end_time}
-
             self.tasks[key].append(task)
 
     def remove_task(self, department:str, shift:str, frequency:str):
@@ -273,22 +250,15 @@ class TaskScheduler:
         headers = ["Department", "Shift", "Frequency", "Program", "Start Time", "End Time", "Next Run Time"]
         for (department, shift), tasks in self.tasks.items():
             for task in tasks:
-                print(task)
                 frequency = task['frequency']
-                print(f'program is {task['program']}')
                 try:
                     program = task['program'].__name__
-                    print(f'program is {task['program']}')
                 except AttributeError as e:
                     program = task['program']
                 start_time = task['start_time']
                 end_time = task['end_time']
-
-                # Get the next run time using the _get_next_run_time method
                 next_run_time = self._get_next_run_time(task, department, shift)
-                # schedule next run time using built in scheduler
                 self._schedule_task(program, task)
-                # Convert next run time to month/day/year hh:mm
                 next_run_time = next_run_time.strftime('%m/%d/%Y %H:%M')
                 tasks_table.append([department, shift, frequency, program, start_time, end_time, next_run_time])
 
@@ -309,53 +279,37 @@ class TaskScheduler:
         end_time = task['end_time']
 
         next_run_time = None
-        next_occurrence, shift_start_time, shift_end_time = self._get_next_occurrence_of_shift(self.shift_times[department][shift])
+        next_occurrence, _, _ = self._get_next_occurrence_of_shift(self.shift_times[department][shift])
 
         if frequency == 'hourly':
             if self.is_night_shift(shift):
-                # For night shifts, handle the hourly interval carefully due to the shift spanning midnight.
                 start_time_dt = datetime.strptime(start_time, '%H:%M')
                 end_time_dt = datetime.strptime(end_time, '%H:%M')
-
-                # Schedule tasks for each hour within the night shift until the end_time
                 while start_time_dt <= end_time_dt:
                     adjusted_start_time = start_time_dt.strftime('%H:%M')
-                    # Add the 'department' key to the task dictionary
                     task['department'] = department
-                    self.next_run_times[(department, shift, frequency)] = start_time_dt  # Store the next run time in the dictionary
+                    self.next_run_times[(department, shift, frequency)] = start_time_dt  
                     schedule.every().hour.at(adjusted_start_time).do(self._execute_task, program, task)
-
-                    # Increment the start_time_dt by one hour while keeping it within a valid date range
                     next_hour = start_time_dt.replace(microsecond=0, second=0, minute=0) + timedelta(hours=1)
                     start_time_dt = start_time_dt.replace(hour=next_hour.hour)
-
-                # Calculate the next occurrence of the morning shift for the department
                 next_occurrence, _, _ = self._get_next_occurrence_of_shift(self.shift_times[department]['Days'])
-                # Schedule tasks for each hour within the morning shift on the next day
                 while next_occurrence <= next_occurrence.replace(hour=7, minute=0):
                     adjusted_start_time = next_occurrence.strftime('%H:%M')
-                    # Add the 'department' key to the task dictionary
                     task['department'] = department
-                    self.next_run_times[(department, shift, frequency)] = next_occurrence  # Store the next run time in the dictionary
+                    self.next_run_times[(department, shift, frequency)] = next_occurrence  
                     schedule.every().hour.at(adjusted_start_time).do(self._execute_task, program, task)
-
-                    # Increment the next_occurrence by one hour while keeping it within a valid date range
                     next_hour = next_occurrence.replace(microsecond=0, second=0, minute=0) + timedelta(hours=1)
                     next_occurrence = next_occurrence.replace(hour=next_hour.hour)
-
             else:
-                # For shifts other than night shifts, handle hourly tasks as before
                 interval = timedelta(hours=1)
                 current_time = datetime.now().replace(second=0, microsecond=0)
                 next_run_time = current_time + interval
 
-                # Schedule tasks for each hour within the time range
                 while next_run_time <= datetime.now().replace(hour=int(end_time[:2]), minute=int(end_time[3:]), second=0, microsecond=0):
                     if next_run_time >= datetime.now().replace(hour=int(start_time[:2]), minute=int(start_time[3:]), second=0, microsecond=0):
                         adjusted_start_time = next_run_time.strftime('%H:%M')
-                        # Add the 'department' key to the task dictionary
                         task['department'] = department
-                        self.next_run_times[(department, shift, frequency)] = next_run_time  # Store the next run time in the dictionary
+                        self.next_run_times[(department, shift, frequency)] = next_run_time  
                         schedule.every().hour.at(adjusted_start_time).do(self._execute_task, program, task)
 
                     next_run_time += interval
@@ -364,54 +318,38 @@ class TaskScheduler:
         
         elif frequency == 'quarterly':
             if self.is_night_shift(shift):
-                # For night shifts, handle the interval carefully due to the shift spanning midnight.
                 start_time_dt = datetime.strptime(start_time, '%H:%M')
                 end_time_dt = datetime.strptime(end_time, '%H:%M')
-
-                # Schedule tasks for each hour within the night shift until the end_time
                 while start_time_dt <= end_time_dt:
                     adjusted_start_time = start_time_dt.strftime('%H:%M')
-                    # Add the 'department' key to the task dictionary
                     task['department'] = department
-                    self.next_run_times[(department, shift, frequency)] = start_time_dt  # Store the next run time in the dictionary
+                    self.next_run_times[(department, shift, frequency)] = start_time_dt 
                     schedule.every().hour.at(adjusted_start_time).do(self._execute_task, program, task)
-
-                    # Increment the start_time_dt by one hour while keeping it within a valid date range
                     next_hour = start_time_dt.replace(microsecond=0, second=0, minute=0) + timedelta(hours=1)
                     start_time_dt = start_time_dt.replace(hour=next_hour.hour)
-
-                # Calculate the next occurrence of the morning shift for the department
                 next_occurrence, _, _ = self._get_next_occurrence_of_shift(self.shift_times[department]['Days'])
-                # Schedule tasks for each hour within the morning shift on the next day
                 while next_occurrence <= next_occurrence.replace(hour=7, minute=0):
                     adjusted_start_time = next_occurrence.strftime('%H:%M')
-                    # Add the 'department' key to the task dictionary
                     task['department'] = department
-                    self.next_run_times[(department, shift, frequency)] = next_occurrence  # Store the next run time in the dictionary
+                    self.next_run_times[(department, shift, frequency)] = next_occurrence  
                     schedule.every().hour.at(adjusted_start_time).do(self._execute_task, program, task)
-
-                    # Increment the next_occurrence by one hour while keeping it within a valid date range
                     next_hour = next_occurrence.replace(microsecond=0, second=0, minute=0) + timedelta(hours=1)
                     next_occurrence = next_occurrence.replace(hour=next_hour.hour)
 
             else:
-                # For shifts other than night shifts, handle quarterly tasks as before
                 interval = (datetime.strptime(end_time, '%H:%M') - datetime.strptime(start_time, '%H:%M')) / 4
 
                 for i in range(1, 5):
                     quarter_time = (datetime.strptime(start_time, '%H:%M') + i * interval).strftime('%H:%M')
                     next_run_time = datetime.now().replace(hour=int(quarter_time[:2]), minute=int(quarter_time[3:]), second=0, microsecond=0)
-                    # Add the 'department' key to the task dictionary
                     task['department'] = department
-                    self.next_run_times[(department, shift, frequency)] = next_run_time  # Store the next run time in the dictionary
+                    self.next_run_times[(department, shift, frequency)] = next_run_time  
                     schedule.every().day.at(quarter_time).do(self._execute_task, program, task)
 
                 next_run_time = datetime.now().replace(hour=int(end_time[:2]), minute=int(end_time[3:]), second=0, microsecond=0)
-                # Add the 'department' key to the task dictionary
                 task['department'] = department
-                self.next_run_times[(department, shift, frequency)] = next_run_time  # Store the next run time in the dictionary
+                self.next_run_times[(department, shift, frequency)] = next_run_time  
                 schedule.every().day.at(end_time).do(self._execute_task, program, task)
-
 
     def _execute_task(self, program: callable, task: dict):
         '''
@@ -422,10 +360,8 @@ class TaskScheduler:
                 task (dict): The task dictionary containing the department, shift, and frequency.
         '''
         next_run_time = self.next_run_times.get((task['department'], task['shift'], task['frequency']), None)
-
         if next_run_time is None:
             return
-
         formatted_next_run_time = next_run_time.strftime('%Y-%m-%d %H:%M:%S')
         logging.info(f"Running {task['frequency']} task for {task['department']} department, shift: {task['shift']} at {formatted_next_run_time}")
         try:
@@ -435,27 +371,15 @@ class TaskScheduler:
     
     def run(self):
         while True:
-            # Iterate over the next_run_times dictionary
             for (department, shift), tasks in self.tasks.items():
                 print(tasks)
-           # for (department, shift), next_run_time in self.next_run_times.items():
-                # Get the current time
                 current_time = datetime.now()
-                
-                # get next run time
                 next_run_time = self.next_run_times.get((department, shift), None)
-                print(next_run_time)
-                # Check if it's time to run the task
                 if current_time >= next_run_time:
-                    # Run the task
                     self._execute_task(department, shift)
-                    
-                    # Update the next_run_time for the task
                     self.next_run_times[(department, shift)] = self._get_next_run_time(
                         self.tasks[(department, shift)], department, shift
                     )
-
-            # Sleep for a minute and check again
             time.sleep(60)
 
     def clear_console(self):
@@ -463,7 +387,6 @@ class TaskScheduler:
         Clear the console based on the OS.
         """
         os.system('cls' if os.name == 'nt' else 'clear')
-
 
     def stop(self):
         """
@@ -493,22 +416,18 @@ class TaskScheduler:
         current_time = datetime.now()
         next_run_time = current_time.replace(hour=start_time.hour, minute=start_time.minute)
         if shift == "Days":
-            # if the current hour is greater than the next run time
             if next_run_time.hour >= end_time.hour:
                 next_run_time += timedelta(days=1)
                 next_run_time = next_run_time.replace(hour=start_time.hour, minute=start_time.minute) 
-        # If the shift is "Nights" and the next run time is after midnight
         if shift == "Nights" and next_run_time.hour <= 9:
             next_run_time += timedelta(days=1)
             next_run_time = next_run_time.replace(hour=start_time.hour, minute=start_time.minute)
-        # Handle the case when 'frequency' is 'hourly', 'daily', or not provided
         frequency = task.get('frequency')
         if frequency == 'hourly':
-            min = 60  # Set default frequency to 60 minutes (1 hour)
+            min = 60  
         elif frequency == 'daily':
-            min = 1440  # Set default frequency to 1440 minutes (1 day)
+            min = 1440  
         elif frequency == 'quarterly':
-            # Calculate the time difference between shift start and end time
             if shift == "Days":
                 shift_duration = (end_time - start_time).total_seconds() / 60
                 min = shift_duration / 4
@@ -516,14 +435,11 @@ class TaskScheduler:
                 shift_duration = (start_time- end_time).total_seconds() / 60
                 min = shift_duration / 4
         else:
-            min = 1440  # Set default frequency to 1440 minutes (1 day) for any other case
+            min = 1440  
 
         while next_run_time <= current_time:
-            # Convert the frequency value to an integer before using it in timedelta
             next_run_time += timedelta(minutes=int(min))
 
-            # If the shift is "Nights" and the next_run_time goes past midnight,
-            # adjust it to the next day.
             if shift == "Nights" and next_run_time.hour >= 24:
                 next_run_time += timedelta(days=1)
                 next_run_time = next_run_time.replace(hour=start_time.hour, minute=start_time.minute)
@@ -549,18 +465,15 @@ class TaskScheduler:
   | | (_| \__ \   <   ___) | (__| | | |  __/ (_| | |_| | |  __/ |   
   |_|\__,_|___/_|\_\ |____/ \___|_| |_|\___|\__,_|\__,_|_|\___|_|   
         '''
-        # center multi line title based on terminal width
         title = "\n".join([" " * (spacing-8)  + line for line in title.split("\n")])
         scheduled_jobs = schedule.get_jobs()
         while True:
             for frame in frames:
                 self.clear_console()
                 print(f'{title}\n{frame}\n\n{task}')
-                print(f'\n\n\t\tscheduled jobs are {scheduled_jobs}')
                 time.sleep(frame_delay)
             if not repeat:
                 break
-
 
 def execute_task(department: str = None, shift: str = None, bat_file: str = None):
     '''
@@ -588,8 +501,7 @@ def execute_task(department: str = None, shift: str = None, bat_file: str = None
             logging.info(f"Running {bat_file} for {department} department, shift: {shift} at {time.strftime('%H:%M')}")
         except:
             logging.error(f"Failed to run {bat_file} for {department} department, shift: {shift} at {time.strftime('%H:%M')}")
-    
-    # return bat file name without bat folder ot the .bat at the end
+            
     return bat_file.split('\\')[-1].split('.')[0]
         
 def load_shift_times(json_file: str)-> str:
@@ -627,7 +539,6 @@ def display_link(url: str, center:boolean = False) -> str:
     colorama.init()
     clickable_link = f"{Fore.BLUE}{url}{Style.RESET_ALL}"
     if center:
-        # center the link
         clickable_link = clickable_link.center(terminal_width)
     return clickable_link
 
@@ -658,17 +569,13 @@ def make_bat_files(bat_file_name: str = None, python_file_path: str = None):
         python_file_path = input('Where is your python file located?: ')
     #testing
     python_file_path = Desktop + r'/'
-    
-    # check if python file path exists
     if not os.path.exists(python_file_path):
-        # raise error
         raise FileNotFoundError(f'File not found at {python_file_path}')
     else:
         if bat_file_name == None:
             bat_file_name = input('What would you like to name the file? ')
         if bat_file_name.split('.')[-1] != 'bat':
             bat_file_name = bat_file_name.split('.')[0] + '.bat'
-    # get python exe if not found raise error
     try:
         python_exe = sys.executable
     except:
@@ -690,11 +597,8 @@ def user_menu():
         Create a ordered list user menu to execute commands
         
     '''
-    # Load shift times from JSON file
     with open('shift_times.json', 'r') as file:
         shift_times = json.load(file)
-
-    # Create an instance of TaskScheduler
     scheduler = TaskScheduler(shift_times)
     wiki = display_link('https://github.com/wiljdaws/scheduler/wiki')
     print(f'Hello {user}, thank you for utilizing Task Scheduler! Created by wiljdaws\n\n If you would like help with the getting started please refer to {wiki}\n\n')
@@ -706,9 +610,7 @@ def user_menu():
         for options in menu_options:
             print(f'{menu_options.index(options)+1}. {options}'.center(terminal_width//2))
         print('\n'+'='* (terminal_width//2))
-        # get user input
         user_input = input('Please enter the number of the method you would like to run: ')
-        # if 1 then make_bat_files()
         if user_input == '1':
             make_bat_files()
         elif user_input == '2':
@@ -730,11 +632,10 @@ def user_menu():
         elif user_input.lower() == '4' or 'q':
             break
         else:
-            # raise error please enter 1, 2 or 3
             raise ValueError('Please enter 1, 2, 3, 4 or q')
         
 if __name__ == "__main__":
-    #user_menu()
+    user_menu()
      # Load shift times from JSON file
     with open('shift_times.json', 'r') as file:
         shift_times = json.load(file)
@@ -744,10 +645,11 @@ if __name__ == "__main__":
 
     # Add tasks for specific departments and shifts
     scheduler.add_task_for_department_shift(department='Inbound', shift='Days', frequency='hourly', program=execute_task('Inbound', 'Days', 'iol_test_test'))
+    scheduler.add_task_for_department_shift(department='Outbound', shift='Days', frequency='hourly', program=execute_task('Outbound', 'Days', 'money_tree'))
     # View the scheduled tasks
     print(scheduler.view_scheduled_tasks())
 
-    #scheduler.display_animation()
+    scheduler.display_animation()
 
     # Start the scheduler
     scheduler.run()
