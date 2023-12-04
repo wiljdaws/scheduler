@@ -635,7 +635,7 @@ def user_menu():
             raise ValueError('Please enter 1, 2, 3, 4 or q')
         
 if __name__ == "__main__":
-    user_menu()
+    # user_menu()
      # Load shift times from JSON file
     with open('shift_times.json', 'r') as file:
         shift_times = json.load(file)
